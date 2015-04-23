@@ -1,5 +1,4 @@
 require 'net/https'
-require 'exceptions'
 
 module Epa
   module Json
