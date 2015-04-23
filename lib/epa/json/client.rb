@@ -6,10 +6,10 @@ module Epa
 
       DEFAULTS = {
           api_secret: 'mYn6hrkg0ILqrtIp8KSD',
-          api_name: 'epayments_client'
+          api_name: 'epayments'
       }
 
-      API_URL = 'https://api.epayments_client.com'
+      API_URL = 'https://api.epayments.com'
 
       attr_accessor :username, :password, :token, :config
 
