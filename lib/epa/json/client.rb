@@ -111,7 +111,7 @@ module Epa
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         request = "Net::HTTP::#{method.downcase.camelize}".constantize.new(uri.request_uri, headers)
         request.body = payload
-        logger.info "Request path: #{path}, payload: #{payload}"
+        logger.info "Request url: #{uri}, payload: #{payload}"
 
         # Send the request
         response = http.request(request)
