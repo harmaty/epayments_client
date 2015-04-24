@@ -22,4 +22,7 @@ gem 'epayments_client', :git => "git://github.com/harmaty/epayments_client.git"
                          currency: 'USD',
                          details: 'my payment',
                          secret_code: '123456'
+
+   client.transaction_history from: 1.hour.ago, to: 1.hour.from_now
+
 ```
