@@ -39,6 +39,7 @@ module Epa
                  else
                    response["ewallets"].first
                  end
+        raise ApiError, 'wallet not found' unless wallet
         wallet["balances"].detect { |b| b["currency"] == currency.downcase }["currentBalance"]
       end
 
@@ -58,7 +59,7 @@ module Epa
         }
 
         response = internal_payment payload
-        raise PaymentException, response["errorMsgs"].join(', ') unless response["confirmationMessage"]
+        raise PaymentError, response["errorMsgs"].join(', ') unless response["confirmationMessage"]
 
         payload[:confirmation] = {
             code: guess_code(options[:secret_code], response["confirmationMessage"]),

@@ -1,9 +1,12 @@
 module Epa
   module Json
-    class PaymentException < StandardError
+    class ApiError < StandardError
     end
 
-    class AuthorizationError < StandardError
+    class PaymentError < ApiError
+    end
+
+    class AuthorizationError < ApiError
     end
 
   end
