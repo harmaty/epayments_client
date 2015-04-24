@@ -4,7 +4,7 @@ Ruby wrapper for epayments JSON API
 
 ```ruby
 
-gem 'epayments_client', :git => "git://github.com/harmaty/epayments_client.git"
+gem 'epayments_client'
 
 ```
 
@@ -12,7 +12,7 @@ gem 'epayments_client', :git => "git://github.com/harmaty/epayments_client.git"
 
 ```ruby
 
-   client = Epa::Json::Client.new 'username', 'password'
+   client = Epa::Json::Client.new 'username', 'password', log: true
 
    client.balance
 

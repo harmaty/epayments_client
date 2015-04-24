@@ -1,5 +1,7 @@
 require 'net/https'
 require 'logger'
+require 'base64'
+require 'active_support/all'
 
 module Epa
   module Json
