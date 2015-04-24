@@ -18,7 +18,7 @@ module Epa
         @username = username
         @password = password
         @config = DEFAULTS.merge options
-        @logger = Logger.new STDOUT
+        @logger = Logger.new @config[:log] ? STDOUT : nil
       end
 
       def get_token
