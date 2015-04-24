@@ -116,8 +116,8 @@ module Epa
         # Send the request
         response = http.request(request)
         json_response = JSON.parse(response.body)
+        logger.info "Response: #{json_response.inspect}"
 
-        logger "Response: #{json_response.inspect}"
         json_response
       end
 
