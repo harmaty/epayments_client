@@ -1,4 +1,5 @@
 require 'net/https'
+require 'logger'
 
 module Epa
   module Json
@@ -11,12 +12,13 @@ module Epa
 
       API_URL = 'https://api.epayments.com'
 
-      attr_accessor :token, :config
+      attr_accessor :token, :config, :logger
 
       def initialize(username, password, options = {})
         @username = username
         @password = password
         @config = DEFAULTS.merge options
+        @logger = Logger.new STDOUT
       end
 
       def get_token
@@ -109,12 +111,14 @@ module Epa
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         request = "Net::HTTP::#{method.downcase.camelize}".constantize.new(uri.request_uri, headers)
         request.body = payload
+        logger.info "Request path: #{path}, payload: #{payload}"
+
         # Send the request
         response = http.request(request)
-        json = JSON.parse(response.body)
-        puts "request payload: #{payload}"
-        puts "response: #{json.inspect}"
-        json
+        json_response = JSON.parse(response.body)
+
+        logger "Response: #{json_response.inspect}"
+        json_response
       end
 
       def guess_code(code, message)
