@@ -82,8 +82,8 @@ module Epa
 
       def transaction_history(options)
         payload = {
-          from: options[:from].to_i || 1.day.ago.to_i,
-          till: options[:to].to_i || Time.now.to_i,
+          from: (options[:from] || 1.day.ago).to_i,
+          till: (options[:to] || Time.now).to_i,
           take: options[:take] || 20,
           skip: options[:skip] || 0
         }
