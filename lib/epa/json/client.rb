@@ -11,7 +11,7 @@ module Epa
 
       API_URL = 'https://api.epayments.com'
 
-      attr_accessor :username, :password, :token, :config
+      attr_accessor :token, :config
 
       def initialize(username, password, options = {})
         @username = username
@@ -22,8 +22,8 @@ module Epa
       def get_token
         data_hash = {
             grant_type: 'password',
-            username: username,
-            password: password
+            username: @username,
+            password: @password
         }
         secret = Base64.encode64("#{config[:api_name]}:#{config[:api_secret]}")
 
@@ -32,56 +32,69 @@ module Epa
         response["access_token"]
       end
 
-      def balance(currency = 'USD')
+      def balance(currency = 'USD', ep_id = nil)
         response = user_info
-        response["ewallets"].first["balances"].detect { |b| b["currency"] == currency.downcase }["currentBalance"]
+        wallet = if ep_id
+                   response["ewallets"].detect { |w| w["ePid"] == ep_id }
+                 else
+                   response["ewallets"].first
+                 end
+        wallet["balances"].detect { |b| b["currency"] == currency.downcase }["currentBalance"]
       end
 
       def transfer_funds(options = {})
-        secret_code = options[:secret_code]
-        currency = options[:currency] || 'USD'
         payload = {
             confirmation: nil,
             mode: "ValidateAndExecute",
             sourcePurse: options[:from],
             transfers: [
-                {amount: options[:amount], currency: currency, details: options[:details], paymentReceiver: options[:to]}
+                {
+                    amount: options[:amount],
+                    currency: options[:currency] || 'USD',
+                    details: options[:details],
+                    paymentReceiver: options[:to]
+                }
             ]
         }
-        response = internal_payment payload
 
+        response = internal_payment payload
         raise PaymentException, response["errorMsgs"].join(', ') unless response["confirmationMessage"]
-        payload[:confirmation] = {code: guess_code(secret_code, response["confirmationMessage"]), sessionId: response["confirmationSessionId"]}
+
+        payload[:confirmation] = {
+            code: guess_code(options[:secret_code], response["confirmationMessage"]),
+            sessionId: response["confirmationSessionId"]
+        }
 
         result_response = internal_payment payload
         result_response["transfers"].first["transactionId"]
       end
 
       def user_info
-        call_json_api '/v1/user', 'GET', "", auth_headers
+        call_json_api '/v1/user', 'GET', "", headers
       end
 
       def internal_payment(payload)
-        call_json_api '/v1/InternalPayment/', 'PUT', payload.to_json, auth_headers
+        call_json_api '/v1/InternalPayment/', 'PUT', payload.to_json, headers
       end
 
       def transaction_history(options)
-        from = options[:from].to_i || 1.day.ago.to_i
-        to = options[:to].to_i || Time.now.to_i
-        take = options[:take] || 20
-        skip = options[:skip] || 0
-        payload = {till: to, from: from, take: take, skip: skip}
+        payload = {
+          from: options[:from].to_i || 1.day.ago.to_i,
+          till: options[:to].to_i || Time.now.to_i,
+          take: options[:take] || 20,
+          skip: options[:skip] || 0
+        }
 
-        response = call_json_api '/v1/transactions', 'POST', payload.to_json, auth_headers
+        response = call_json_api '/v1/transactions', 'POST', payload.to_json, headers
         response["transactions"]
       end
 
       private
 
-      def auth_headers
+      def headers
         @token ||= get_token
         {
-            'Authorization' => "Bearer #{token}",
+            'Authorization' => "Bearer #{@token}",
             'Accept' => 'application/json',
             'Content-Type' => 'application/json'
         }
@@ -95,7 +108,6 @@ module Epa
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         request = "Net::HTTP::#{method.downcase.camelize}".constantize.new(uri.request_uri, headers)
         request.body = payload
-        puts request.body
         # Send the request
         response = http.request(request)
         JSON.parse(response.body)
@@ -103,7 +115,7 @@ module Epa
 
       def guess_code(code, message)
         numbers = message.scan(/\d\,\d\,\d/).first
-        numbers.split(/\,/).map{ |i| code[i.to_i - 1] }.join
+        numbers.split(/\,/).map { |i| code[i.to_i - 1] }.join
       end
 
     end
