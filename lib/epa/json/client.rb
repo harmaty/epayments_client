@@ -111,7 +111,10 @@ module Epa
         request.body = payload
         # Send the request
         response = http.request(request)
-        JSON.parse(response.body)
+        json = JSON.parse(response.body)
+        puts "request payload: #{payload}"
+        puts "response: #{json.inspect}"
+        json
       end
 
       def guess_code(code, message)
