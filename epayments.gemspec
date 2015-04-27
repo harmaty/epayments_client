@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'epayments_client'
-  s.version     = '0.0.2'
+  s.version     = '0.0.3'
   s.date        = '2015-04-23'
   s.summary     = "Epayments client"
   s.description = "Ruby wrapper for epayments JSON API"
@@ -8,5 +8,7 @@ Gem::Specification.new do |s|
   s.email       = 'harmaty@gmail.com'
   s.files       = Dir["{lib}/**/*"]
   s.homepage    = 'https://github.com/harmaty/epayments_client'
-  s.add_dependency 'activesupport'
+  s.add_dependency 'activesupport', '>= 3.0.0'
+  s.add_dependency 'savon', '>= 2.5.0'
+  s.license = 'MIT'
 end
