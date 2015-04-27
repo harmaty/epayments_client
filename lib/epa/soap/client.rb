@@ -80,7 +80,7 @@ module Epa
       def transfer_funds(options)
         internal_payment from_wallet_id: options[:from],
                          to_wallet_id: options[:to],
-                         amount: options[:amount],
+                         amount: options[:amount].to_f,
                          currency: options[:currency] || 'USD',
                          payment_id: options[:payment_id] || rand(2**32),
                          details: options[:details]
