@@ -9,6 +9,6 @@ Gem::Specification.new do |s|
   s.files       = Dir["{lib}/**/*"]
   s.homepage    = 'https://github.com/harmaty/epayments_client'
   s.add_dependency 'activesupport', '>= 3.0.0'
-  s.add_dependency 'savon', '>= 2.5.0'
+  s.add_dependency 'savon', '~> 2.5'
   s.license = 'MIT'
 end
