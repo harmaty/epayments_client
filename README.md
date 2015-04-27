@@ -1,4 +1,4 @@
-Ruby wrapper for epayments JSON API
+Ruby wrapper for epayments JSON and SOAP API
 
 ## Installation
 
@@ -12,7 +12,11 @@ gem 'epayments_client'
 
 ```ruby
 
-   client = Epa::Json::Client.new 'username', 'password', log: true
+   # Using JSON API
+   client = Epa::Client.new 'username', 'password', :json, log: true
+
+   # Using SOAP API
+   client = Epa::Client.new 'client_id', 'password', :soap, log: true
 
    client.balance
 

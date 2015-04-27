@@ -60,7 +60,7 @@ module Epa
         else
           get_balances.detect{|b| b[:currency] == currency}
         end
-        wallet[:balance] if wallet
+        wallet[:balance].to_f if wallet
       end
 
       def internal_payment(options)

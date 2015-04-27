@@ -1,9 +1,9 @@
 Gem::Specification.new do |s|
   s.name        = 'epayments_client'
-  s.version     = '0.0.3'
+  s.version     = '0.0.4'
   s.date        = '2015-04-23'
   s.summary     = "Epayments client"
-  s.description = "Ruby wrapper for epayments JSON API"
+  s.description = "Ruby wrapper for epayments JSON and SOAP API"
   s.authors     = ["Artem Harmaty"]
   s.email       = 'harmaty@gmail.com'
   s.files       = Dir["{lib}/**/*"]

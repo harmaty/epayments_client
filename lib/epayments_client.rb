@@ -1,3 +1,4 @@
+require 'epa/client'
 require 'epa/json/client'
 require 'epa/json/exceptions'
 require 'epa/soap/client'

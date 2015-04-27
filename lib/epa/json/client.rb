@@ -94,17 +94,6 @@ module Epa
         response["transactions"]
       end
 
-      private
-
-      def headers
-        @token ||= get_token
-        {
-            'Authorization' => "Bearer #{@token}",
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        }
-      end
-
       def call_json_api(path, method = 'get', payload = "", headers = {})
         uri = URI(API_URL)
         uri.path = path
@@ -121,6 +110,17 @@ module Epa
         logger.info "Response: #{json_response.inspect}"
 
         json_response
+      end
+
+      private
+
+      def headers
+        @token ||= get_token
+        {
+            'Authorization' => "Bearer #{@token}",
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        }
       end
 
       def guess_code(code, message)
